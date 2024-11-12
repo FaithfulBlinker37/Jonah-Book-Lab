@@ -25,16 +25,59 @@ public class PigLatinTranslator
     return result;
   }
 
-  private static String translateWord(String input)
-  {
-    // System.out.println("translateWord: '" + input + "'");
+  private static String translateWord(String input) {
+    // Handle empty strings
+    if (input.isEmpty()) {
+        return input;
+    }
 
-    // Replace this code to correctly translate a single word.
-    // Start here first!
-    String result = input;
-    
-    return result;
-  }
+    // Check if the word starts with a vowel (a, e, i, o, u)
+    boolean startsWithUpperCase = Character.isUpperCase(input.charAt(0));  // Check if the word starts with a capital letter
+
+    // Handle punctuation at the end of the word
+    String punctuation = "";
+    if (!Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
+        punctuation = input.substring(input.length() - 1); // Store punctuation
+        input = input.substring(0, input.length() - 1);  // Remove punctuation
+    }
+
+    // If the word starts with a vowel, just add "ay" at the end
+    if ("aeiouAEIOU".indexOf(input.charAt(0)) != -1) {
+        String result = input + "ay";
+        return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
+    }
+
+    // Otherwise, find the first vowel and move the consonant cluster to the end
+    int firstVowelIndex = -1;
+    for (int i = 0; i < input.length(); i++) {
+        if ("aeiouAEIOU".indexOf(input.charAt(i)) != -1) {
+            firstVowelIndex = i;
+            break;
+        }
+    }
+
+    // If no vowels are found (e.g., "rhythm"), treat it as a consonant-heavy word
+    if (firstVowelIndex == -1) {
+        String result = input + "ay";
+        return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
+    }
+
+    // Move the consonant cluster to the end and add "ay"
+    String consonantCluster = input.substring(0, firstVowelIndex);
+    String restOfWord = input.substring(firstVowelIndex);
+    String result = restOfWord + consonantCluster + "ay";
+
+    // Capitalize the first letter if needed
+    return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
+}
+
+// Helper method to capitalize the first letter of a word
+private static String capitalizeFirstLetter(String word) {
+    if (word == null || word.isEmpty()) {
+        return word;
+    }
+    return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+}
 
   // Add additonal private methods here.
   // For example, I had one like this:

@@ -8,14 +8,26 @@ public class PigLatinTranslator
 
     // Add code here to populate translatedBook with a translation of the input book.
     // Curent do-nothing code will return an empty book.
-
+    for (int i = 0; i < input.getLineCount(); i++) {
+        String translatedLine = translate(input.getLine(i)); // Translate the line
+        translatedBook.appendLine(translatedLine); // Add the translated line
+    }
     return translatedBook;
   }
 
   public static String translate(String input)
   {
     // System.out.println("Translate String: '" + input + "'");
+    String[] words = input.split("(?<=\\s)|(?=\\s)");
+    StringBuilder translatedText = new StringBuilder();
 
+    for (String word : words) {
+        if (word.trim().isEmpty()) {
+            translatedText.append(word); // Keep original whitespace
+        } else {
+            translatedText.append(translateWord(word)); // Translate each word
+        }
+    }
     // Replace this code to translate a string input.
     // The input to this function could be any English string. 
     // A sentence, paragraph, or a single word. 

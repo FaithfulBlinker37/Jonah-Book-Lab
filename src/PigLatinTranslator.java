@@ -18,24 +18,23 @@ public class PigLatinTranslator
   public static String translate(String input)
   {
     // System.out.println("Translate String: '" + input + "'");
-    String[] words = input.split("(?<=\\s)|(?=\\s)");
-    StringBuilder translatedText = new StringBuilder();
+    String[] parts = input.split("(?<=\\s)|(?=\\s)");
+        StringBuilder translated = new StringBuilder();
 
-    for (String word : words) {
-        if (word.trim().isEmpty()) {
-            translatedText.append(word); // Keep original whitespace
-        } else {
-            translatedText.append(translateWord(word)); // Translate each word
+        for (String part : parts) {
+            if (part.trim().isEmpty()) {
+                translated.append(part); // Preserve whitespace
+            } else {
+                translated.append(translateWord(part)); // Translate word
+            }
         }
+
+        return translated.toString();
     }
     // Replace this code to translate a string input.
     // The input to this function could be any English string. 
     // A sentence, paragraph, or a single word. 
     // It should call translateWord at least once.
-    String result = translateWord(input);
-
-    return result;
-  }
 
   private static String translateWord(String input) {
     // Handle empty strings

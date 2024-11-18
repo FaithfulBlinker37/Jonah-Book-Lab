@@ -87,8 +87,9 @@ public class PigLatinTranslator
     String restOfWord = input.substring(firstVowelIndex);
     String result = restOfWord + consonantCluster + "ay";
 
+    result = matchCase(input, result);
+    return result + punctuation;
     // Capitalize the first letter if needed
-    return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
 }
 
 private static String matchCase(String original, String result) {

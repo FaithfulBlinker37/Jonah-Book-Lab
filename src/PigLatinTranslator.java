@@ -116,7 +116,7 @@ private static String preserveMixedCase(String original, String result) {
             adjusted.append(Character.toLowerCase(resultChar));
         }
     }
-
+    
     if (result.length() > minLength) {
         adjusted.append(result.substring(minLength));
     }

@@ -91,6 +91,31 @@ public class PigLatinTranslator
     return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
 }
 
+private static String matchCase(String original, String result) {
+    if (original.equals(original.toUpperCase())) {
+        return result.toUpperCase();
+    } else if (original.equals(original.toLowerCase())) {
+        return result.toLowerCase();
+    } else {
+        return preserveMixedCase(original, result);
+    }
+}
+
+private static String preserveMixedCase(String original, String result) {
+        StringBuilder adjusted = new StringBuilder();
+        int minLength = Math.min(original.length(), result.length());
+
+        for (int i = 0; i < minLength; i++) {
+            char originalChar = original.charAt(i);
+            char resultChar = result.charAt(i);
+
+            if (Character.isUpperCase(originalChar)) {
+                adjusted.append(Character.toUpperCase(resultChar));
+            } else {
+                adjusted.append(Character.toLowerCase(resultChar));
+            }
+        }
+
 // Helper method to capitalize the first letter of a word
 private static String capitalizeFirstLetter(String word) {
     if (word == null || word.isEmpty()) {

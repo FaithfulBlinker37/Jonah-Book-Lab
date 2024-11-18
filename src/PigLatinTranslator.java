@@ -52,6 +52,15 @@ public class PigLatinTranslator
         input = input.substring(0, input.length() - 1);  // Remove punctuation
     }
 
+    if (input.contains("-")) {
+        String[] parts = input.split("-");
+        StringBuilder translatedParts = new StringBuilder();
+        for (String part : parts) {
+            translatedParts.append(translateWord(part)).append("-");
+        }
+        return translatedParts.substring(0, translatedParts.length() - 1) + punctuation;
+    }
+
     // If the word starts with a vowel, just add "ay" at the end
     if ("aeiouAEIOU".indexOf(input.charAt(0)) != -1) {
         String result = input + "ay";

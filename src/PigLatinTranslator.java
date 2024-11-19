@@ -82,14 +82,16 @@ public class PigLatinTranslator
         return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
     }
 
+    
     // Move the consonant cluster to the end and add "ay"
     String consonantCluster = input.substring(0, firstVowelIndex);
     String restOfWord = input.substring(firstVowelIndex);
     String result = restOfWord + consonantCluster + "ay";
 
-    result = matchCase(input, result);
-    return result + punctuation;
-    // Capitalize the first letter if needed
+    result = preserveMixedCase(input, result);
+
+// Append punctuation and return final result
+return result + punctuation;
 }
 
 private static String matchCase(String original, String result) {
@@ -104,21 +106,41 @@ private static String matchCase(String original, String result) {
 
 private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
-    int minLength = Math.min(original.length(), result.length());
+    int resultIndex = 0;
 
-    for (int i = 0; i < minLength; i++) {
+    // Traverse each character in the original word
+    for (int i = 0; i < original.length(); i++) {
         char originalChar = original.charAt(i);
-        char resultChar = result.charAt(i);
 
+        // If the result is out of characters, stop mapping
+        if (resultIndex >= result.length()) {
+            break;
+        }
+
+        char resultChar = result.charAt(resultIndex);
+
+        // Skip non-letter characters in the result
+        while (resultIndex < result.length() && !Character.isLetter(resultChar)) {
+            adjusted.append(resultChar);
+            resultIndex++;
+            if (resultIndex < result.length()) {
+                resultChar = result.charAt(resultIndex);
+            }
+        }
+
+        // Match case
         if (Character.isUpperCase(originalChar)) {
             adjusted.append(Character.toUpperCase(resultChar));
         } else {
             adjusted.append(Character.toLowerCase(resultChar));
         }
+
+        resultIndex++;
     }
-    
-    if (result.length() > minLength) {
-        adjusted.append(result.substring(minLength));
+
+    // Append any remaining characters from the result
+    if (resultIndex < result.length()) {
+        adjusted.append(result.substring(resultIndex));
     }
 
     return adjusted.toString();

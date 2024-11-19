@@ -108,37 +108,29 @@ private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
     int resultIndex = 0;
 
-    // Traverse each character in the original word
+    // Match each character from the original word
     for (int i = 0; i < original.length(); i++) {
         char originalChar = original.charAt(i);
 
-        // If the result is out of characters, stop mapping
-        if (resultIndex >= result.length()) {
-            break;
-        }
-
-        char resultChar = result.charAt(resultIndex);
-
-        // Skip non-letter characters in the result
-        while (resultIndex < result.length() && !Character.isLetter(resultChar)) {
-            adjusted.append(resultChar);
+        // Skip non-alphabetic characters in the result
+        while (resultIndex < result.length() && !Character.isLetter(result.charAt(resultIndex))) {
+            adjusted.append(result.charAt(resultIndex));
             resultIndex++;
-            if (resultIndex < result.length()) {
-                resultChar = result.charAt(resultIndex);
+        }
+
+        // If there are still characters left in the result, adjust the case
+        if (resultIndex < result.length()) {
+            char resultChar = result.charAt(resultIndex);
+            if (Character.isUpperCase(originalChar)) {
+                adjusted.append(Character.toUpperCase(resultChar));
+            } else {
+                adjusted.append(Character.toLowerCase(resultChar));
             }
+            resultIndex++;
         }
-
-        // Match case
-        if (Character.isUpperCase(originalChar)) {
-            adjusted.append(Character.toUpperCase(resultChar));
-        } else {
-            adjusted.append(Character.toLowerCase(resultChar));
-        }
-
-        resultIndex++;
     }
 
-    // Append any remaining characters from the result
+    // Append remaining characters from the result
     if (resultIndex < result.length()) {
         adjusted.append(result.substring(resultIndex));
     }

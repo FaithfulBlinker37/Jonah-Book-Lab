@@ -104,23 +104,21 @@ private static String matchCase(String original, String result) {
 
 private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
-    int originalLength = original.length();
-    int resultLength = result.length();
+    int minLength = Math.min(original.length(), result.length());
 
-    for (int i = 0; i < resultLength; i++) {
+    for (int i = 0; i < minLength; i++) {
+        char originalChar = original.charAt(i);
         char resultChar = result.charAt(i);
 
-        // If within the bounds of the original string, match its case
-        if (i < originalLength) {
-            char originalChar = original.charAt(i);
-            if (Character.isUpperCase(originalChar)) {
-                adjusted.append(Character.toUpperCase(resultChar));
-            } else {
-                adjusted.append(Character.toLowerCase(resultChar));
-            }
+        if (Character.isUpperCase(originalChar)) {
+            adjusted.append(Character.toUpperCase(resultChar));
         } else {
             adjusted.append(Character.toLowerCase(resultChar));
         }
+    }
+    
+    if (result.length() > minLength) {
+        adjusted.append(result.substring(minLength));
     }
 
     return adjusted.toString();

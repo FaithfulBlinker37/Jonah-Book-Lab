@@ -43,14 +43,12 @@ public class PigLatinTranslator
     }
 
     // Check if the word starts with a vowel (a, e, i, o, u)
-    boolean startsWithUpperCase = Character.isUpperCase(input.charAt(0));  // Check if the word starts with a capital letter
-
-    // Handle punctuation at the end of the word
     String punctuation = "";
     if (!Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
         punctuation = input.substring(input.length() - 1); // Store punctuation
         input = input.substring(0, input.length() - 1);  // Remove punctuation
     }
+
 
     if (input.contains("-")) {
         String[] parts = input.split("-");
@@ -64,10 +62,10 @@ public class PigLatinTranslator
     // If the word starts with a vowel, just add "ay" at the end
     if ("aeiouAEIOU".indexOf(input.charAt(0)) != -1) {
         String result = input + "ay";
-        return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
+        return preserveMixedCase(input, result) + punctuation;
     }
 
-    // Otherwise, find the first vowel and move the consonant cluster to the end
+    // Find the first vowel and move the consonant cluster to the end
     int firstVowelIndex = -1;
     for (int i = 0; i < input.length(); i++) {
         if ("aeiouAEIOU".indexOf(input.charAt(i)) != -1) {
@@ -76,22 +74,19 @@ public class PigLatinTranslator
         }
     }
 
-    // If no vowels are found (e.g., "rhythm"), treat it as a consonant-heavy word
+    // If no vowels are found, treat it as a consonant-heavy word
     if (firstVowelIndex == -1) {
         String result = input + "ay";
-        return startsWithUpperCase ? capitalizeFirstLetter(result) + punctuation : result + punctuation;
+        return preserveMixedCase(input, result) + punctuation;
     }
 
-    
     // Move the consonant cluster to the end and add "ay"
     String consonantCluster = input.substring(0, firstVowelIndex);
     String restOfWord = input.substring(firstVowelIndex);
     String result = restOfWord + consonantCluster + "ay";
 
-    result = preserveMixedCase(input, result);
-
-// Append punctuation and return final result
-return result + punctuation;
+    // Preserve the mixed case of the original word
+    return preserveMixedCase(input, result) + punctuation;
 }
 
 private static String matchCase(String original, String result) {
@@ -108,17 +103,16 @@ private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
     int resultIndex = 0;
 
-    // Match each character from the original word
     for (int i = 0; i < original.length(); i++) {
         char originalChar = original.charAt(i);
 
-        // Skip non-alphabetic characters in the result
+        // Skip non-letter characters in the result
         while (resultIndex < result.length() && !Character.isLetter(result.charAt(resultIndex))) {
             adjusted.append(result.charAt(resultIndex));
             resultIndex++;
         }
 
-        // If there are still characters left in the result, adjust the case
+        // Match the case of the original character
         if (resultIndex < result.length()) {
             char resultChar = result.charAt(resultIndex);
             if (Character.isUpperCase(originalChar)) {
@@ -130,7 +124,7 @@ private static String preserveMixedCase(String original, String result) {
         }
     }
 
-    // Append remaining characters from the result
+    // Append any remaining characters from the result
     if (resultIndex < result.length()) {
         adjusted.append(result.substring(resultIndex));
     }

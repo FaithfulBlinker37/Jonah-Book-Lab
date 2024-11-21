@@ -49,14 +49,14 @@ while (!input.isEmpty() && !Character.isLetterOrDigit(input.charAt(input.length(
     input = input.substring(0, input.length() - 1);
 }
 
-    if (input.contains("-")) {
-        String[] parts = input.split("-");
-        StringBuilder translatedParts = new StringBuilder();
-        for (String part : parts) {
-            translatedParts.append(translateWord(part)).append("-");
-        }
-        return translatedParts.substring(0, translatedParts.length() - 1) + punctuation;
+if (input.contains("-")) {
+    String[] parts = input.split("-");
+    StringBuilder translatedParts = new StringBuilder();
+    for (String part : parts) {
+        translatedParts.append(translateWord(part)).append("-");
     }
+    return translatedParts.substring(0, translatedParts.length() - 1) + punctuation;
+}
 
     // If the word starts with a vowel, just add "ay" at the end
     if ("aeiouAEIOU".indexOf(input.charAt(0)) != -1) {
@@ -78,6 +78,7 @@ while (!input.isEmpty() && !Character.isLetterOrDigit(input.charAt(input.length(
         String result = input + "ay";
         return preserveMixedCase(input, result) + punctuation;
     }
+    
 
     // Move the consonant cluster to the end and add "ay"
     String consonantCluster = input.substring(0, firstVowelIndex);

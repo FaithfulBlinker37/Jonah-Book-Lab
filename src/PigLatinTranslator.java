@@ -89,55 +89,40 @@ public class PigLatinTranslator
     return preserveMixedCase(input, result) + punctuation;
 }
 
-private static String matchCase(String original, String result) {
-    if (original.equals(original.toUpperCase())) {
-        return result.toUpperCase();
-    } else if (original.equals(original.toLowerCase())) {
-        return result.toLowerCase();
-    } else {
-        return preserveMixedCase(original, result);
-    }
-}
-
 private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
-    int resultIndex = 0;
 
-    for (int i = 0; i < original.length(); i++) {
-        char originalChar = original.charAt(i);
+    // Remove non-letter characters from `original` to match result's core letters
+    String cleanOriginal = original.replaceAll("[^a-zA-Z]", "");
+    int originalIndex = 0;
 
-        // Skip non-letter characters in the result
-        while (resultIndex < result.length() && !Character.isLetter(result.charAt(resultIndex))) {
-            adjusted.append(result.charAt(resultIndex));
-            resultIndex++;
+    for (int i = 0; i < result.length(); i++) {
+        char resultChar = result.charAt(i);
+
+        // Preserve non-letters as is
+        if (!Character.isLetter(resultChar)) {
+            adjusted.append(resultChar);
+            continue;
         }
 
-        // Match the case of the original character
-        if (resultIndex < result.length()) {
-            char resultChar = result.charAt(resultIndex);
+        // Match the letter's case from the original
+        if (originalIndex < cleanOriginal.length()) {
+            char originalChar = cleanOriginal.charAt(originalIndex);
             if (Character.isUpperCase(originalChar)) {
                 adjusted.append(Character.toUpperCase(resultChar));
             } else {
                 adjusted.append(Character.toLowerCase(resultChar));
             }
-            resultIndex++;
+            originalIndex++;
+        } else {
+            // If original letters are exhausted, append the remaining result as is
+            adjusted.append(resultChar);
         }
-    }
-
-    // Append any remaining characters from the result
-    if (resultIndex < result.length()) {
-        adjusted.append(result.substring(resultIndex));
     }
 
     return adjusted.toString();
 }
-// Helper method to capitalize the first letter of a word
-private static String capitalizeFirstLetter(String word) {
-    if (word == null || word.isEmpty()) {
-        return word;
-    }
-    return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
-}
+
 
   // Add additonal private methods here.
   // For example, I had one like this:

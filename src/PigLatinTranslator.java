@@ -44,46 +44,42 @@ public class PigLatinTranslator
 
     // Check if the word starts with a vowel (a, e, i, o, u)
     String punctuation = "";
-while (!input.isEmpty() && !Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
-    punctuation = input.charAt(input.length() - 1) + punctuation;
-    input = input.substring(0, input.length() - 1);
-}
-
-if (input.contains("-")) {
-    String[] parts = input.split("-");
-    StringBuilder translatedParts = new StringBuilder();
-    for (String part : parts) {
-        translatedParts.append(translateWord(part)).append("-");
+    while (!input.isEmpty() && !Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
+        punctuation = input.charAt(input.length() - 1) + punctuation;
+        input = input.substring(0, input.length() - 1);
     }
-    return translatedParts.substring(0, translatedParts.length() - 1) + punctuation;
-}
+
+    if (input.contains("-")) {
+        String[] parts = input.split("-");
+        StringBuilder translatedParts = new StringBuilder();
+        for (String part : parts) {
+            translatedParts.append(translateWord(part)).append("-");
+        }
+        return translatedParts.substring(0, translatedParts.length() - 1) + punctuation;
+    }
 
     // If the word starts with a vowel, just add "ay" at the end
     if ("aeiouAEIOU".indexOf(input.charAt(0)) != -1) {
-        String result = input + "ay";
-        return preserveMixedCase(input, result) + punctuation;
-    }
+    String result = input + "ay";
+    return preserveMixedCase(input, result) + punctuation;
+}
 
-    // Find the first vowel and move the consonant cluster to the end
-    int firstVowelIndex = -1;
-    for (int i = 0; i < input.length(); i++) {
-        if ("aeiouAEIOU".indexOf(input.charAt(i)) != -1) {
-            firstVowelIndex = i;
-            break;
-        }
+int firstVowelIndex = -1;
+for (int i = 0; i < input.length(); i++) {
+    if ("aeiouAEIOU".indexOf(input.charAt(i)) != -1) {
+        firstVowelIndex = i;
+        break;
     }
+}
 
-    // If no vowels are found, treat it as a consonant-heavy word
-    if (firstVowelIndex == -1) {
-        String result = input + "ay";
-        return preserveMixedCase(input, result) + punctuation;
-    }
-    
+if (firstVowelIndex == -1) {
+    String result = input + "ay";
+    return preserveMixedCase(input, result) + punctuation;
+}
 
-    // Move the consonant cluster to the end and add "ay"
-    String consonantCluster = input.substring(0, firstVowelIndex);
-    String restOfWord = input.substring(firstVowelIndex);
-    String result = restOfWord + consonantCluster + "ay";
+String consonantCluster = input.substring(0, firstVowelIndex);
+String restOfWord = input.substring(firstVowelIndex);
+String result = restOfWord + consonantCluster + "ay";
 
     // Preserve the mixed case of the original word
     return preserveMixedCase(input, result) + punctuation;
@@ -92,8 +88,10 @@ if (input.contains("-")) {
 private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
 
-    int originalIndex = 0;
-
+    boolean startsWithUpper = Character.isUpperCase(original.charAt(0));
+    
+    // Process the result with respect to the original word's case
+    boolean firstLetterProcessed = false;
     for (int i = 0; i < result.length(); i++) {
         char resultChar = result.charAt(i);
 
@@ -103,27 +101,17 @@ private static String preserveMixedCase(String original, String result) {
             continue;
         }
 
-        // If we still have letters left in the original word
-        if (originalIndex < original.length()) {
-            char originalChar = original.charAt(originalIndex);
-
-            // Match the case of the original letter
-            if (Character.isUpperCase(originalChar)) {
+        if (!firstLetterProcessed) {
+            // Apply capitalization to the first letter if needed
+            if (startsWithUpper) {
                 adjusted.append(Character.toUpperCase(resultChar));
             } else {
                 adjusted.append(Character.toLowerCase(resultChar));
             }
-
-            // Move to the next letter in the original word (ignoring non-letters)
-            originalIndex++;
-
-            // Skip over non-letter characters in the original if present
-            while (originalIndex < original.length() && !Character.isLetter(original.charAt(originalIndex))) {
-                originalIndex++;
-            }
+            firstLetterProcessed = true;  // Only the first letter gets the special treatment
         } else {
-            // If original letters are exhausted, append the remaining result as-is
-            adjusted.append(resultChar);
+            // For the rest, maintain lowercase or uppercase based on the result
+            adjusted.append(Character.toLowerCase(resultChar));
         }
     }
 

@@ -34,9 +34,9 @@ public class App {
         input.readFromUrl("A Christmas Carol", "https://www.gutenberg.org/cache/epub/24022/pg24022.txt");
 
 
-        input.printlines(0,2);
+        input.printlines(208,5);
         Book output = PigLatinTranslator.translate(input);
-        output.printlines(0,2);
+        output.printlines(208,5);
         //output.writeToFile();
     }
 }

@@ -31,7 +31,7 @@ public class App {
         input.readFromString("Test", "Dog\nCat\nMouse");
 
         // Example reading from a URL
-        input.readFromUrl("Romeo and Juliette", "https://www.gutenberg.org/cache/epub/37041/pg37041.txt");
+        input.readFromUrl("Preservation of Bull Semen at Sub-Zero Temperatures", "https://www.gutenberg.org/cache/epub/37041/pg37041.txt");
 
 
         input.printlines(0,2);

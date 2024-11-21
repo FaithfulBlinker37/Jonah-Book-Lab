@@ -44,11 +44,10 @@ public class PigLatinTranslator
 
     // Check if the word starts with a vowel (a, e, i, o, u)
     String punctuation = "";
-    if (!Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
-        punctuation = input.substring(input.length() - 1); // Store punctuation
-        input = input.substring(0, input.length() - 1);    // Remove punctuation
-    }
-
+while (!input.isEmpty() && !Character.isLetterOrDigit(input.charAt(input.length() - 1))) {
+    punctuation = input.charAt(input.length() - 1) + punctuation;
+    input = input.substring(0, input.length() - 1);
+}
 
     if (input.contains("-")) {
         String[] parts = input.split("-");
@@ -92,8 +91,8 @@ public class PigLatinTranslator
 private static String preserveMixedCase(String original, String result) {
     StringBuilder adjusted = new StringBuilder();
 
-    // Remove non-letter characters from `original` to match result's core letters
     int originalIndex = 0;
+
     for (int i = 0; i < result.length(); i++) {
         char resultChar = result.charAt(i);
 
@@ -104,36 +103,25 @@ private static String preserveMixedCase(String original, String result) {
         }
 
         // Match the case from the original word.
+        while (originalIndex < original.length() && !Character.isLetter(original.charAt(originalIndex))) {
+            originalIndex++;
+        }
+
         if (originalIndex < original.length()) {
             char originalChar = original.charAt(originalIndex);
-
-            // Skip non-letters in the original.
-            while (originalIndex < original.length() && !Character.isLetter(originalChar)) {
-                originalIndex++;
-                if (originalIndex < original.length()) {
-                    originalChar = original.charAt(originalIndex);
-                }
-            }
-
-            if (originalIndex < original.length()) {
-                if (Character.isUpperCase(originalChar)) {
-                    adjusted.append(Character.toUpperCase(resultChar));
-                } else {
-                    adjusted.append(Character.toLowerCase(resultChar));
-                }
-                originalIndex++;
+            if (Character.isUpperCase(originalChar)) {
+                adjusted.append(Character.toUpperCase(resultChar));
             } else {
-                // If no matching case remains, append as-is.
-                adjusted.append(resultChar);
+                adjusted.append(Character.toLowerCase(resultChar));
             }
+            originalIndex++;
         } else {
-            adjusted.append(resultChar); // Append any extra characters.
+            adjusted.append(resultChar);
         }
     }
 
     return adjusted.toString();
 }
-
 
   // Add additonal private methods here.
   // For example, I had one like this:

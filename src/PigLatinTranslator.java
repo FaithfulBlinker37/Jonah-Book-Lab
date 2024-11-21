@@ -103,20 +103,26 @@ private static String preserveMixedCase(String original, String result) {
             continue;
         }
 
-        // Match the case from the original word.
-        while (originalIndex < original.length() && !Character.isLetter(original.charAt(originalIndex))) {
-            originalIndex++;
-        }
-
+        // If we still have letters left in the original word
         if (originalIndex < original.length()) {
             char originalChar = original.charAt(originalIndex);
+
+            // Match the case of the original letter
             if (Character.isUpperCase(originalChar)) {
                 adjusted.append(Character.toUpperCase(resultChar));
             } else {
                 adjusted.append(Character.toLowerCase(resultChar));
             }
+
+            // Move to the next letter in the original word (ignoring non-letters)
             originalIndex++;
+
+            // Skip over non-letter characters in the original if present
+            while (originalIndex < original.length() && !Character.isLetter(original.charAt(originalIndex))) {
+                originalIndex++;
+            }
         } else {
+            // If original letters are exhausted, append the remaining result as-is
             adjusted.append(resultChar);
         }
     }

@@ -28,8 +28,6 @@ public class App {
 
         // Start with a "test" book based on a string.
         // Get this to work, and all the tests to pass first.
-        input.readFromString("Test", "Dog\nCat\nMouse");
-
         // Example reading from a URL
         input.readFromUrl("A Christmas Carol", "https://www.gutenberg.org/cache/epub/24022/pg24022.txt");
 
@@ -37,7 +35,7 @@ public class App {
         input.printlines(208,5);
         Book output = PigLatinTranslator.translate(input);
         output.printlines(208,5);
-        //output.writeToFile();
+        output.writeToFile();
     }
 }
 
